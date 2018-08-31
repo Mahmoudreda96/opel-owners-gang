@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -18,12 +19,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mainview = findViewById(R.id.webview);
+
         WebSettings webSettings = mainview.getSettings();
         webSettings.setJavaScriptEnabled(true);
         mainview.loadUrl("https://test.opelownersgang.com/");
+
+        //improve webView performance
+        mainview.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+        mainview.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        mainview.getSettings().setAppCacheEnabled(true);
+        mainview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setSavePassword(true);
+        webSettings.setSaveFormData(true);
+        webSettings.setEnableSmoothTransition(true);
         mainview.setWebViewClient(new WebViewClient());
 
+        //permission alert to enable
         RxPermissions rxPermissions = new RxPermissions(this);
         rxPermissions
                 .request(Manifest.permission.ACCESS_FINE_LOCATION,
