@@ -2,28 +2,53 @@ package com.opelownersgang.opelownersgang;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 public class MainActivity extends AppCompatActivity {
     WebView mainview;
+    ProgressBar progressBar;
+    String  url;
+
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        url="https://test.opelownersgang.com";
         mainview = findViewById(R.id.webview);
+        progressBar = findViewById(R.id.progressBar);
 
+        mainview.setVisibility(View.VISIBLE);
         WebSettings webSettings = mainview.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        mainview.setWebChromeClient(new WebChromeClient());
+        mainview.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                progressBar.setVisibility(View.GONE);
+                mainview.setVisibility(View.VISIBLE);
+                String javaScript = "javascript:(function() { var a= document.getElementsByTagName('header');a[0].hidden='true';a=document.getElementsByClassName('page_body');a[0].style.padding='0px';})()";
+                mainview.loadUrl(javaScript);
+            }
+        });
+
         mainview.loadUrl("https://test.opelownersgang.com/");
 
         //improve webView performance
@@ -34,10 +59,7 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setDomStorageEnabled(true);
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         webSettings.setUseWideViewPort(true);
-        webSettings.setSavePassword(true);
         webSettings.setSaveFormData(true);
-        webSettings.setEnableSmoothTransition(true);
-        mainview.setWebViewClient(new WebViewClient());
 
         //permission alert to enable
         RxPermissions rxPermissions = new RxPermissions(this);
@@ -53,8 +75,19 @@ public class MainActivity extends AppCompatActivity {
                         // At least one permission is denied
                     }
                 });
-    }
 
+    }
+    /*public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        if (url.startsWith("tel:")) {
+            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+            startActivity(intent);
+            view.reload();
+            return true;
+        }
+
+        view.loadUrl(url);
+        return true;
+    }*/
     @Override
     public void onBackPressed() {
         if (mainview.canGoBack()) {
@@ -66,3 +99,4 @@ public class MainActivity extends AppCompatActivity {
 
 
 }
+
