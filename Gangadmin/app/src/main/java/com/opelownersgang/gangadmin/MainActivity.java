@@ -70,8 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "No Internet Access", Toast.LENGTH_LONG).show();
 
             }
-        })
-                ;
+        });
 
         // Execute Requesting
         RequestQueue requestQueue = Volley.newRequestQueue(this);
