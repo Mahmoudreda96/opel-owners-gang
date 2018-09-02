@@ -13,6 +13,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     Ringtone y;
     NotificationManager mNM;
     Notification mNotify;
+    Vibrator v;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         mainview = findViewById(R.id.webview);
         progressBar = findViewById(R.id.progressBar);
         url = "https://test.opelownersgang.com";
+
 
         permeation_alert();
         notification();
@@ -126,13 +129,11 @@ public class MainActivity extends AppCompatActivity {
         builder.setSmallIcon(R.drawable.logo);
         builder.setContentIntent(pIntent);
         builder.setAutoCancel(true);
-        //Vibrator v;
         mNotify = builder.build();
         mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        v= (Vibrator) getSystemService(VIBRATOR_SERVICE);
         h = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         y = RingtoneManager.getRingtone(getApplicationContext(), h);
-        // v= (Vibrator) context.getSystemService(VIBRATOR_SERVICE);
-        //v.vibrate(10000);
     }
 
     public void MSG() {
@@ -157,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
                     String Name = sharedpreferences.getString("Name", null); // getting String;
                     if (!id.equals(Name)) {
                         mNM.notify(0, mNotify);
+                        v.vibrate(100000);
                         y.play();
                         //edit sharedpreferences id
                         SharedPreferences sharedPreferences = getSharedPreferences("data", Context.MODE_PRIVATE);
