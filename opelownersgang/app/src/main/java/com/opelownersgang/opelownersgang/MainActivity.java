@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setAutoCancel(true);
         mNotify = builder.build();
         mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        v= (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         h = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         y = RingtoneManager.getRingtone(getApplicationContext(), h);
     }
@@ -139,8 +139,7 @@ public class MainActivity extends AppCompatActivity {
     public void MSG() {
 
         // URL To Fetch Data From The Server
-        String GETURL = "https://gametyapp.000webhostapp.com/signintech.php";
-
+        String GETURL = "http://opelownersgang.com/Notify/get_msg.php";
 
         // Method To Get  The Data From DataBase
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, GETURL, null, new Response.Listener<JSONArray>() {
@@ -152,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
                     JSONObject ob = response.getJSONObject(1);
 
-                    id = (ob.getString("id"));
+                    id = (ob.getString("ID"));
                     msg = (ob.getString("msg"));
                     SharedPreferences sharedpreferences = getSharedPreferences("data", Context.MODE_PRIVATE);
                     String Name = sharedpreferences.getString("Name", null); // getting String;
