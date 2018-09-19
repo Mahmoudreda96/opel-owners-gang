@@ -28,9 +28,10 @@ import org.json.JSONObject;
  */
 
 public class MyService extends Service {
-    String id, msg;
+    int id, n;
     Uri h;
     Ringtone y;
+    String GETURL;
     NotificationManager mNM;
     Notification mNotify;
     Vibrator v;
@@ -38,16 +39,56 @@ public class MyService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        MSG();
+        notification();
         return null;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        notification();
         MSG();
-
+        notification();
         return START_STICKY;
+    }
+
+
+    public void MSG() {
+
+        // URL To Fetch Data From The Server
+
+        // String GETURL = "http://opelownersgang.com/Notify/get_msg.php";
+        GETURL = "https://gametyapp.000webhostapp.com/get.php";
+        // Method To Get  The Data From DataBase
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, GETURL, null, response -> {
+
+            try {
+
+
+                JSONObject ob = response.getJSONObject(1);
+
+                id = (ob.getInt("announcement_ID"));
+                SharedPreferences sharedpreferences = getSharedPreferences("data", Context.MODE_PRIVATE);
+                int Name = sharedpreferences.getInt("Name", 1); // getting int
+                //calculate number of message
+                n = id - Name;
+                //check have new message or not
+                if (n >= 1) {
+                    //edit sharedpreferences id
+                    SharedPreferences sharedPreferences = getSharedPreferences("data", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt("Name", id);
+                    editor.apply();
+                    //display notification
+                    notification();
+                }
+            } catch (JSONException e) {
+                Toast.makeText(getApplicationContext(), "Problem in Server", Toast.LENGTH_LONG).show();
+            }
+        }, error -> Toast.makeText(getApplicationContext(), "No Internet Access", Toast.LENGTH_LONG).show());
+        // Execute Requesting
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(request);
     }
 
     public void notification() {
@@ -58,7 +99,7 @@ public class MyService extends Service {
 
         Notification.Builder builder = new Notification.Builder(this);
         builder.setContentTitle("the gang");
-        builder.setContentText("touch to disable massage ");
+        builder.setContentText("touch to disable " + n + " new massage");
         builder.setSmallIcon(R.drawable.logo);
         builder.setContentIntent(pIntent);
         builder.setAutoCancel(true);
@@ -67,50 +108,8 @@ public class MyService extends Service {
         v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         h = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         y = RingtoneManager.getRingtone(getApplicationContext(), h);
-    }
-
-    public void MSG() {
-
-        // URL To Fetch Data From The Server
-
-        String GETURL = "http://opelownersgang.com/Notify/get_msg.php";
-        // Method To Get  The Data From DataBase
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, GETURL, null, response -> {
-
-            try {
-
-
-                JSONObject ob = response.getJSONObject(1);
-
-                id = (ob.getString("ID"));
-                msg = (ob.getString("msg"));
-                SharedPreferences sharedpreferences = getSharedPreferences("data", Context.MODE_PRIVATE);
-                String Name = sharedpreferences.getString("Name", null); // getting String;
-                if (!id.equals(Name)) {
-
-                    //edit sharedpreferences id
-                    SharedPreferences sharedPreferences = getSharedPreferences("data", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("Name", id);
-                    editor.apply();
-
-                    //edit sharedpreferences msg
-                    SharedPreferences sharedPreferences2 = getSharedPreferences("data", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor2 = sharedPreferences2.edit();
-                    editor2.putString("Name2", id);
-                    editor2.apply();
-                }
-            } catch (JSONException e) {
-
-                Toast.makeText(getApplicationContext(), "Problem in Server", Toast.LENGTH_LONG).show();
-            }
-        }, error -> Toast.makeText(getApplicationContext(), "No Internet Access", Toast.LENGTH_LONG).show());
         mNM.notify(0, mNotify);
         v.vibrate(100000);
         y.play();
-
-        // Execute Requesting
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        requestQueue.add(request);
     }
 }
