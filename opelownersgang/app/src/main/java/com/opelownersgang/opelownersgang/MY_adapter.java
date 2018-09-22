@@ -42,12 +42,10 @@ public class MY_adapter extends BaseAdapter {
         LayoutInflater inf = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (view == null)
             view = inf.inflate(R.layout.customer_list_dash, null);
-        //TextView x = view.findViewById(R.id.time);
-        //TextView s = view.findViewById(R.id.date);
+        TextView x = view.findViewById(R.id.time);
         TextView y = view.findViewById(R.id.description_customer);
-         TextView f = view.findViewById(R.id.id_customer);
-        //x.setText(list.get(position).getTime());
-        //s.setText(list.get(position).getDate());
+        TextView f = view.findViewById(R.id.id_customer);
+        x.setText(list.get(position).getTime());
         y.setText(list.get(position).getDesc());
         f.setText(list.get(position).getId());
         return view;

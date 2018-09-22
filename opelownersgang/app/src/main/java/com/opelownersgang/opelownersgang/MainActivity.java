@@ -5,12 +5,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.ConnectivityManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -19,18 +20,21 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
+
     WebView mainview;
     ProgressBar progressBar;
     String url;
+    Thread t;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    @SuppressLint("SetJavaScriptEnabled")
+    @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,49 +45,34 @@ public class MainActivity extends AppCompatActivity {
 
         url = "https://test.opelownersgang.com";
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> {
-            Intent i = new Intent(getApplicationContext(), display_notifications.class);
-            startActivity(i);
-
-        });
-        mainview.addJavascriptInterface(new WebAppInterface(this), "Android");
-
         //display permeation
         permeation_alert();
 
+        //check new message
+        startService(new Intent(MainActivity.this, MyService.class));
+
         //check internet
-        if (!isNetworkAvailable(this)) {
-            Toast.makeText(this, "No Internet connection", Toast.LENGTH_LONG).show();
-        } else {
-            // refresh url after .. time;
-            Thread t = new Thread() {
+        checkConnection();
 
-                @Override
-                public void run() {
-
-                    while (!isInterrupted()) {
-
-                        try {
-                            Thread.sleep(30 * 60 * 1000);  //1800000ms = 30 m
-                            runOnUiThread(() -> startService(new Intent(MainActivity.this, MyService.class)));
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }
-            };
-            t.start();
-            startService(new Intent(MainActivity.this, MyService.class));
-        }
-
+        mainview.addJavascriptInterface(new WebAppInterface(this), "Android");
         mainview.setVisibility(View.VISIBLE);
         WebSettings webSettings = mainview.getSettings();
         webSettings.setJavaScriptEnabled(true);
         mainview.setWebChromeClient(new WebChromeClient());
         mainview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         mainview.setWebViewClient(new MyWebViewClient());
+        webSettings.setGeolocationEnabled(true);
+        webSettings.setSupportMultipleWindows(true);
+        //improve webView performance
+        mainview.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+        mainview.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        mainview.getSettings().setAppCacheEnabled(true);
+        mainview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setSaveFormData(true);
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         mainview.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -101,19 +90,13 @@ public class MainActivity extends AppCompatActivity {
         });
         mainview.loadUrl(url);
 
-        //improve webView performance
-        mainview.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
-        mainview.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        mainview.getSettings().setAppCacheEnabled(true);
-        mainview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        webSettings.setDomStorageEnabled(true);
-        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-        webSettings.setUseWideViewPort(true);
-        webSettings.setSaveFormData(true);
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        //floating Button
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> {
+            Intent i = new Intent(getApplicationContext(), display_notifications.class);
+            startActivity(i);
 
-
-
+        });
     }
 
     @Override
@@ -131,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
             if (Uri.parse(url).getHost().equals("https://test.opelownersgang.com")) {
                 return false;
             }
-            // Otherwise, the link is not for a page on my site, so launch another Activity that handles URLs
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(intent);
             return true;
@@ -169,12 +151,63 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //check internet
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (conMan.getActiveNetworkInfo() != null && conMan.getActiveNetworkInfo().isConnected())
-            return true;
-        else
-            return false;
+    private void showSnack(boolean isConnected) {
+        if (isConnected) {
+            Snackbar snackbar = Snackbar
+                    .make(findViewById(R.id.main_activity), "Connected", Snackbar.LENGTH_LONG);
+            View sbView = snackbar.getView();
+            TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(Color.GREEN);
+            snackbar.show();
+            mainview.loadUrl(url);
+            // refresh url after .. time;
+             t = new Thread() {
+
+                @Override
+                public void run() {
+
+                    while (!isInterrupted()) {
+
+                        try {
+                            Thread.sleep(30*60*1000);  //1800000ms = 30 m
+                            runOnUiThread(() -> startService(new Intent(MainActivity.this, MyService.class)));
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            };
+            t.start();
+        } else {
+            Snackbar snackbar2 = Snackbar
+                    .make(findViewById(R.id.main_activity), "Waiting For Network", Snackbar.LENGTH_INDEFINITE);
+            View sbView2 = snackbar2.getView();
+            TextView textView2 = sbView2.findViewById(android.support.design.R.id.snackbar_text);
+            textView2.setTextColor(Color.RED);
+            snackbar2.show();
+
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register connection status listener
+        MyApplication.getInstance().setConnectivityListener(this);
+    }
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+        showSnack(isConnected);
+    }
+    /**
+     * Callback will be triggered when there is change in
+     * network connection
+     */
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
     }
 
     public boolean shouldOverrideUrlLoading(WebView view, String url) {

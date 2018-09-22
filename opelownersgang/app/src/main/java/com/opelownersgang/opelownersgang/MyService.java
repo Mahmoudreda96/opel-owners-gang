@@ -40,7 +40,6 @@ public class MyService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         MSG();
-        notification();
         return null;
     }
 
@@ -48,7 +47,6 @@ public class MyService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         MSG();
-        notification();
         return START_STICKY;
     }
 
@@ -57,19 +55,15 @@ public class MyService extends Service {
 
         // URL To Fetch Data From The Server
 
-        // String GETURL = "http://opelownersgang.com/Notify/get_msg.php";
-        GETURL = "https://gametyapp.000webhostapp.com/get.php";
+        GETURL = "http://opelownersgang.com/Notify/get_msgone.php";
         // Method To Get  The Data From DataBase
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, GETURL, null, response -> {
 
             try {
-
-
-                JSONObject ob = response.getJSONObject(1);
-
-                id = (ob.getInt("announcement_ID"));
+                JSONObject ob = response.getJSONObject(0);
+                id = (ob.getInt("ID"));
                 SharedPreferences sharedpreferences = getSharedPreferences("data", Context.MODE_PRIVATE);
-                int Name = sharedpreferences.getInt("Name", 1); // getting int
+                int Name = sharedpreferences.getInt("Name", 0); // getting int
                 //calculate number of message
                 n = id - Name;
                 //check have new message or not
@@ -85,7 +79,7 @@ public class MyService extends Service {
             } catch (JSONException e) {
                 Toast.makeText(getApplicationContext(), "Problem in Server", Toast.LENGTH_LONG).show();
             }
-        }, error -> Toast.makeText(getApplicationContext(), "No Internet Access", Toast.LENGTH_LONG).show());
+        }, error -> Toast.makeText(getApplicationContext(), "No Internet Access", Toast.LENGTH_LONG));
         // Execute Requesting
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(request);

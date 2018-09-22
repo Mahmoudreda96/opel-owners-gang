@@ -1,8 +1,12 @@
 package com.opelownersgang.opelownersgang;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -15,84 +19,94 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class display_notifications extends AppCompatActivity {
+public class display_notifications extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
-//    TextView msg;
-//    String id, Msg;
+    String GETURL;
+    ListView l;
+    ArrayList<item_Dash_Board> list_Item;
+    JsonArrayRequest request;
+    JSONObject ob;
+    item_Dash_Board object;
+    MY_adapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_notifcation);
-       // msg = findViewById(R.id.msg_view);
         MSG();
-//        SharedPreferences sharedpreferences2 = getSharedPreferences("data", Context.MODE_PRIVATE);
-//        String Name2 = sharedpreferences2.getString("Name", null); // getting String;
-//        msg.setText(Name2);
+
     }
 
-  public void MSG() {
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
+    }
+
+    public void MSG() {
 
 
-      // URL To Fetch Data From The Server
-      String GETURL = "https://gametyapp.000webhostapp.com/get.php";
-      final ListView l = findViewById(R.id.list_notification);
+        // URL To Fetch Data From The Server
+        GETURL = "http://opelownersgang.com/Notify/get_msg.php";
+        l = findViewById(R.id.list_notification);
 
-      // Method To Get Chat The Data From DataBase
+        // Method To Get Chat The Data From DataBase
 
-      final ArrayList<item_Dash_Board> list_Item = new ArrayList<>();
+        list_Item = new ArrayList<>();
 
-      JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, GETURL, null, response -> {
+        request = new JsonArrayRequest(Request.Method.GET, GETURL, null, response -> {
 
-          try {
+            try {
 
-              for (int i = 0; i < response.length(); i++) {
+                for (int i = 0; i < response.length(); i++) {
 
-                  JSONObject ob = response.getJSONObject(i);
-                  item_Dash_Board object = new item_Dash_Board();
-                  //object.setDate(ob.getString("date"));
-                  object.setDesc(ob.getString("description"));
-                  //object.setTime(ob.getString("time"));
-                  object.setId(ob.getString("title"));
-                  list_Item.add(object);
+                    ob = response.getJSONObject(i);
+                    object = new item_Dash_Board();
+                    object.setDesc(ob.getString("msg"));
+                    object.setTime(ob.getString("msg_date"));
+                    object.setId(ob.getString("ID"));
+                    list_Item.add(object);
+                }
+                adapter = new MY_adapter(getApplicationContext(), list_Item);
+                l.setAdapter(adapter);
 
-              }
+            } catch (JSONException e) {
 
-              final MY_adapter adapter = new MY_adapter(getApplicationContext(), list_Item);
-              l.setAdapter(adapter);
+                Toast.makeText(getApplicationContext(), "Problem in Server", Toast.LENGTH_LONG).show();
+            }
+        }, error -> Toast.makeText(getApplicationContext(), "No Internet Access", Toast.LENGTH_LONG));
 
-          } catch (JSONException e) {
+        // Execute Requesting
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(request);
+    }
 
-              Toast.makeText(getApplicationContext(), "Problem in Server", Toast.LENGTH_LONG).show();
-          }
-      }, error -> Toast.makeText(getApplicationContext(), "No Internet Access", Toast.LENGTH_LONG).show());
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-      // Execute Requesting
-      RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-      requestQueue.add(request);
-  }
-  }
-//
-//        // URL To Fetch Data From The Server
-//
-//        String GETURL = "http://opelownersgang.com/Notify/get_msg.php";
-//        // Method To Get  The Data From DataBase
-//        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, GETURL, null, response -> {
-//            try {
-//
-//
-//                JSONObject ob = response.getJSONObject(94);
-//
-////                id = (ob.getString("ID"));
-////                Msg = (ob.getString("msg"));
-//                msg.setText(ob.getString("msg"));
-//            } catch (JSONException e) {
-//
-//                Toast.makeText(getApplicationContext(), "Problem in Server", Toast.LENGTH_LONG).show();
-//            }
-//        }, error -> Toast.makeText(getApplicationContext(), "No Internet Access", Toast.LENGTH_LONG).show());
-//        // Execute Requesting
-//        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-//        requestQueue.add(request);
-//    }
+        // register connection status listener
+        MyApplication.getInstance().setConnectivityListener(this);
+    }
 
+
+    private void showSnack(boolean isConnected) {
+        if (isConnected) {
+            Snackbar snackbar = Snackbar
+                    .make(findViewById(R.id.display_notification), "Connected", Snackbar.LENGTH_LONG);
+            View sbView = snackbar.getView();
+            TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(Color.GREEN);
+            snackbar.show();
+            MSG();
+        } else {
+            Snackbar snackbar2 = Snackbar
+                    .make(findViewById(R.id.display_notification), "Waiting For Network", Snackbar.LENGTH_INDEFINITE);
+            View sbView2 = snackbar2.getView();
+            TextView textView2 = sbView2.findViewById(android.support.design.R.id.snackbar_text);
+            textView2.setTextColor(Color.RED);
+            snackbar2.show();
+        }
+
+
+    }
+}
