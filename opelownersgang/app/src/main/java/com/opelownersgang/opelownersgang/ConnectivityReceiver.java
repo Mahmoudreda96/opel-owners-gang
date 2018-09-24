@@ -1,5 +1,5 @@
 package com.opelownersgang.opelownersgang; /**
- * Created by Lincoln on 18/03/16.
+ * Created by Mahmoud reda.
  */
 
 import android.content.BroadcastReceiver;
@@ -18,7 +18,11 @@ public class ConnectivityReceiver
     }
 
     @Override
-    public void onReceive(Context context, Intent arg1) {
+    public void onReceive(Context context, Intent intent) {
+//        Intent i = new Intent(context, MainActivity.class);
+//        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        context.startActivity(i);
+
         ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();

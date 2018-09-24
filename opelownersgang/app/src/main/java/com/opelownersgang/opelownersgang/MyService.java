@@ -49,7 +49,11 @@ public class MyService extends Service {
         MSG();
         return START_STICKY;
     }
-
+@Override
+public void onDestroy(){
+    MSG();
+    super.onDestroy();
+}
 
     public void MSG() {
 
