@@ -80,6 +80,7 @@ public void onDestroy(){
                     //display notification
                     notification();
                 }
+
             } catch (JSONException e) {
                 Toast.makeText(getApplicationContext(), "Problem in Server", Toast.LENGTH_LONG).show();
             }

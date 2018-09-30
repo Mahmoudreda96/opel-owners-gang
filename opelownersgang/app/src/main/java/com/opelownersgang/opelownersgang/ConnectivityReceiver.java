@@ -19,9 +19,8 @@ public class ConnectivityReceiver
 
     @Override
     public void onReceive(Context context, Intent intent) {
-//        Intent i = new Intent(context, MainActivity.class);
-//        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        context.startActivity(i);
+        Intent serviceIntent = new Intent(context, MyService.class);
+        context.startService(serviceIntent);
 
         ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -2,6 +2,8 @@ package com.opelownersgang.opelownersgang;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -25,14 +27,14 @@ import android.widget.Toast;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
     WebView mainview;
     ProgressBar progressBar;
     String url;
-    Thread t;
     FloatingActionButton fab;
-
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         mainview = findViewById(R.id.webview);
         progressBar = findViewById(R.id.progressBar);
@@ -57,24 +60,16 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         startService(new Intent(MainActivity.this, MyService.class));
 
         // refresh url after .. time;
-        t = new Thread() {
+        Intent myIntent = new Intent(MainActivity.this, MyService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(MainActivity.this, 0, myIntent, 0);
 
-            @Override
-            public void run() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-                while (!isInterrupted()) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
 
-                    try {
-                        Thread.sleep(3000);  //30*60*1000 = 30 m
-                        runOnUiThread(() -> startService(new Intent(MainActivity.this, MyService.class)));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 30 * 60 * 1000, pendingIntent); //millis*seconds*minutes
 
-                }
-            }
-        };
-        t.start();
 
         mainview.addJavascriptInterface(new WebAppInterface(this), "Android");
         mainview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -108,27 +103,20 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
                 mainview.setVisibility(View.VISIBLE);
                 String javaScript = "javascript:(function() { var a= document.getElementsByTagName('header');a[0].hidden='true';a=document.getElementsByClassName('page_body');a[0].style.padding='0px';})()";
                 mainview.loadUrl(javaScript);
+
             }
         });
 
-        //check internet
-        checkConnection();
         //floating Button
         fab.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(), display_notifications.class);
             startActivity(i);
 
         });
+        //check internet
+        checkConnection();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (mainview.canGoBack()) {
-            mainview.goBack();
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     public class MyWebViewClient extends WebViewClient {
         @Override
@@ -158,6 +146,15 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         @JavascriptInterface
         public void showToast(String toast) {
             Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mainview.canGoBack()) {
+            mainview.goBack();
+        } else {
+            super.onBackPressed();
         }
     }
 
