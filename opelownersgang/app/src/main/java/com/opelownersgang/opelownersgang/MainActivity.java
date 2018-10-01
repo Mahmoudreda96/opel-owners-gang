@@ -6,6 +6,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.webkit.JavascriptInterface;
+import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -35,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     ProgressBar progressBar;
     String url;
     FloatingActionButton fab;
+    private AlarmManager alarmMgr;
+    private PendingIntent pendingIntent;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
@@ -61,15 +65,10 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 
         // refresh url after .. time;
         Intent myIntent = new Intent(MainActivity.this, MyService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(MainActivity.this, 0, myIntent, 0);
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
+        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
+        alarmMgr = (AlarmManager)MainActivity.this.getSystemService(Context.ALARM_SERVICE);
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 30 * 60 * 1000, pendingIntent); //millis*seconds*minutes
-
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
 
         mainview.addJavascriptInterface(new WebAppInterface(this), "Android");
         mainview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -90,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         webSettings.setSaveFormData(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         mainview.loadUrl(url);
+
         mainview.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -104,6 +104,23 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
                 String javaScript = "javascript:(function() { var a= document.getElementsByTagName('header');a[0].hidden='true';a=document.getElementsByClassName('page_body');a[0].style.padding='0px';})()";
                 mainview.loadUrl(javaScript);
 
+            }
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view,String url) {
+                if( URLUtil.isNetworkUrl(url) ) {
+                    return false;
+                }
+                if (appInstalledOrNot(url)) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity( intent );
+                }
+                if (url.startsWith("mailto:") || url.startsWith("tel:")) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(url));
+                    startActivity(intent);
+                }
+                view.loadUrl(url);
+                return true;
             }
         });
 
@@ -179,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             textView.setTextColor(Color.GREEN);
             snackbar.show();
             fab.setVisibility(View.VISIBLE);
+
         } else {
             Snackbar snackbar2 = Snackbar
                     .make(findViewById(R.id.main_activity), "Waiting For Network", Snackbar.LENGTH_INDEFINITE);
@@ -187,6 +205,9 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             textView2.setTextColor(Color.RED);
             snackbar2.show();
             fab.hide();
+            if (alarmMgr!= null) {
+                alarmMgr.cancel(pendingIntent);
+            }
 
         }
     }
@@ -211,18 +232,17 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     public void onNetworkConnectionChanged(boolean isConnected) {
         showSnack(isConnected);
     }
-//    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//        if (url.startsWith("tel:")) {
-//            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
-//            startActivity(intent);
-//            view.reload();
-//            return true;
-//        }
-//
-//        view.loadUrl(url);
-//        return true;
-//    }
 
+    private boolean appInstalledOrNot(String uri) {
+        PackageManager pm = getPackageManager();
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+        }
+
+        return false;
+    }
 }
 
 

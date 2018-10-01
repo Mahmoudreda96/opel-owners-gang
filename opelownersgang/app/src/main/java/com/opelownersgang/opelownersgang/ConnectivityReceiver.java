@@ -1,4 +1,5 @@
-package com.opelownersgang.opelownersgang; /**
+package com.opelownersgang.opelownersgang;
+/**
  * Created by Mahmoud reda.
  */
 
@@ -19,6 +20,7 @@ public class ConnectivityReceiver
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
         Intent serviceIntent = new Intent(context, MyService.class);
         context.startService(serviceIntent);
 
