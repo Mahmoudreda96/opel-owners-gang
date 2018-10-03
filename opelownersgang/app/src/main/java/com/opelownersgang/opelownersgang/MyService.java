@@ -49,11 +49,12 @@ public class MyService extends Service {
         MSG();
         return START_STICKY;
     }
-@Override
-public void onDestroy(){
-    MSG();
-    super.onDestroy();
-}
+
+    @Override
+    public void onDestroy() {
+        MSG();
+        super.onDestroy();
+    }
 
     public void MSG() {
 
@@ -77,8 +78,25 @@ public void onDestroy(){
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putInt("Name", id);
                     editor.apply();
+
                     //display notification
-                    notification();
+                    Intent intent1 = new Intent(this.getApplicationContext(), display_notifications.class);
+                    PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent1, 0);
+
+                    Notification.Builder builder = new Notification.Builder(this);
+                    builder.setContentTitle("the gang");
+                    builder.setContentText("touch to disable " + n + " new massage");
+                    builder.setSmallIcon(R.drawable.logo);
+                    builder.setContentIntent(pIntent);
+                    builder.setAutoCancel(true);
+                    mNotify = builder.build();
+                    mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                    h = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    y = RingtoneManager.getRingtone(getApplicationContext(), h);
+                    mNM.notify(0, mNotify);
+                    v.vibrate(100000);
+                    y.play();
                 }
 
             } catch (JSONException e) {
@@ -88,27 +106,5 @@ public void onDestroy(){
         // Execute Requesting
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(request);
-    }
-
-    public void notification() {
-
-
-        Intent intent1 = new Intent(this.getApplicationContext(), display_notifications.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent1, 0);
-
-        Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle("the gang");
-        builder.setContentText("touch to disable " + n + " new massage");
-        builder.setSmallIcon(R.drawable.logo);
-        builder.setContentIntent(pIntent);
-        builder.setAutoCancel(true);
-        mNotify = builder.build();
-        mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        h = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        y = RingtoneManager.getRingtone(getApplicationContext(), h);
-        mNM.notify(0, mNotify);
-        v.vibrate(100000);
-        y.play();
     }
 }

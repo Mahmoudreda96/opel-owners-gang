@@ -17,7 +17,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.webkit.JavascriptInterface;
 import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -25,7 +24,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -39,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     FloatingActionButton fab;
     private AlarmManager alarmMgr;
     private PendingIntent pendingIntent;
+    WebSettings webSettings;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
@@ -66,29 +65,26 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         // refresh url after .. time;
         Intent myIntent = new Intent(MainActivity.this, MyService.class);
         pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
-        alarmMgr = (AlarmManager)MainActivity.this.getSystemService(Context.ALARM_SERVICE);
+        alarmMgr = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
         Calendar calendar = Calendar.getInstance();
-        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
-
-        mainview.addJavascriptInterface(new WebAppInterface(this), "Android");
-        mainview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        WebSettings webSettings = mainview.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        mainview.setWebChromeClient(new WebChromeClient());
-        mainview.setWebViewClient(new MyWebViewClient());
-        webSettings.setGeolocationEnabled(true);
-        webSettings.setSupportMultipleWindows(true);
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
 
         //improve webView performance
-        mainview.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
-        mainview.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        mainview.getSettings().setAppCacheEnabled(true);
+        mainview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        mainview.setWebChromeClient(new WebChromeClient());
+        webSettings = mainview.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
+        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setSaveFormData(true);
+        webSettings.setGeolocationEnabled(true);
+        webSettings.setSupportMultipleWindows(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         webSettings.setUseWideViewPort(true);
-        webSettings.setSaveFormData(true);
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        mainview.loadUrl(url);
+
 
         mainview.setWebViewClient(new WebViewClient() {
             @Override
@@ -105,24 +101,25 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
                 mainview.loadUrl(javaScript);
 
             }
+
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view,String url) {
-                if( URLUtil.isNetworkUrl(url) ) {
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (URLUtil.isNetworkUrl(url)) {
                     return false;
-                }
-                if (appInstalledOrNot(url)) {
+                } else if (appInstalledOrNot(url)) {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    startActivity( intent );
-                }
-                if (url.startsWith("mailto:") || url.startsWith("tel:")) {
+                    startActivity(intent);
+                } else if (url.startsWith("tel:") || url.equals("https://www.facebook.com/groups/opel.owners.gang/")) {
                     Intent intent = new Intent(Intent.ACTION_VIEW,
                             Uri.parse(url));
                     startActivity(intent);
+                } else {
+                    view.loadUrl(url);
                 }
-                view.loadUrl(url);
                 return true;
             }
         });
+
 
         //floating Button
         fab.setOnClickListener(view -> {
@@ -132,38 +129,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         });
         //check internet
         checkConnection();
-    }
-
-
-    public class MyWebViewClient extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (Uri.parse(url).getHost().equals("https://test.opelownersgang.com")) {
-                return false;
-            }
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(intent);
-            return true;
-        }
-    }
-
-    public class WebAppInterface {
-        Context mContext;
-
-        /**
-         * Instantiate the interface and set the context
-         */
-        WebAppInterface(Context c) {
-            mContext = c;
-        }
-
-        /**
-         * Show a toast from the web page
-         */
-        @JavascriptInterface
-        public void showToast(String toast) {
-            Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
-        }
+        mainview.loadUrl(url);
     }
 
     @Override
@@ -205,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             textView2.setTextColor(Color.RED);
             snackbar2.show();
             fab.hide();
-            if (alarmMgr!= null) {
+            if (alarmMgr != null) {
                 alarmMgr.cancel(pendingIntent);
             }
 
