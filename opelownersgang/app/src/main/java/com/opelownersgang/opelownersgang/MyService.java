@@ -1,5 +1,5 @@
 package com.opelownersgang.opelownersgang;
-
+/*
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -27,7 +27,7 @@ import org.json.JSONObject;
  * Created by mahmoud reda on 03/09/2018.
  */
 
-public class MyService extends Service {
+/*public class MyService extends Service {
     int id, n;
     Uri h;
     Ringtone y;
@@ -108,3 +108,4 @@ public class MyService extends Service {
         requestQueue.add(request);
     }
 }
+*/

@@ -21,8 +21,8 @@ public class ConnectivityReceiver
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Intent serviceIntent = new Intent(context, MyService.class);
-        context.startService(serviceIntent);
+       /* Intent serviceIntent = new Intent(context, MyService.class);
+        context.startService(serviceIntent);*/
 
         ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -37,7 +37,8 @@
         android:layout_marginTop="16dp"
         app:backgroundTint="@android:color/background_dark"
         app:srcCompat="@drawable/ic_notifications_active_black_24dp"
-        tools:ignore="VectorDrawableCompat" />
+        tools:ignore="VectorDrawableCompat"
+        android:visibility="invisible"/>
 
 
 

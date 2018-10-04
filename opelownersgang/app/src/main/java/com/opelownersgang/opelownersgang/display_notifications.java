@@ -1,4 +1,4 @@
-package com.opelownersgang.opelownersgang;
+/*package com.opelownersgang.opelownersgang;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -109,4 +109,4 @@ public class display_notifications extends AppCompatActivity implements Connecti
 
 
     }
-}
+}*/

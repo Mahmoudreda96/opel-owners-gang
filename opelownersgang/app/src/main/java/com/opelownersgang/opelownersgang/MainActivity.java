@@ -2,9 +2,6 @@ package com.opelownersgang.opelownersgang;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,7 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -27,16 +23,14 @@ import android.widget.TextView;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
-import java.util.Calendar;
-
 public class MainActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
     WebView mainview;
     ProgressBar progressBar;
     String url;
-    FloatingActionButton fab;
-    private AlarmManager alarmMgr;
-    private PendingIntent pendingIntent;
+   // FloatingActionButton fab;
+   // private AlarmManager alarmMgr;
+   // private PendingIntent pendingIntent;
     WebSettings webSettings;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -49,25 +43,25 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 
         mainview = findViewById(R.id.webview);
         progressBar = findViewById(R.id.progressBar);
-        fab = findViewById(R.id.fab);
+        //fab = findViewById(R.id.fab);
 
         url = "https://test.opelownersgang.com";
 
         //hide floating Button & main view
         mainview.setVisibility(View.INVISIBLE);
-        fab.hide();
+       // fab.hide();
         //display permeation
         permeation_alert();
 
         //check new message
-        startService(new Intent(MainActivity.this, MyService.class));
+        //startService(new Intent(MainActivity.this, MyService.class));
 
         // refresh url after .. time;
-        Intent myIntent = new Intent(MainActivity.this, MyService.class);
-        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
-        alarmMgr = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
-        Calendar calendar = Calendar.getInstance();
-        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
+        //Intent myIntent = new Intent(MainActivity.this, MyService.class);
+       // pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
+        //alarmMgr = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
+       // Calendar calendar = Calendar.getInstance();
+       // alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
 
         //improve webView performance
         mainview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -122,11 +116,11 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 
 
         //floating Button
-        fab.setOnClickListener(view -> {
+       /* fab.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(), display_notifications.class);
             startActivity(i);
 
-        });
+        });*/
         //check internet
         checkConnection();
         mainview.loadUrl(url);
@@ -145,10 +139,10 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         //permission alert to enable
         RxPermissions rxPermissions = new RxPermissions(this);
         rxPermissions
-                .request(Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CALL_PHONE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.CAMERA) // ask single or multiple permission once
+                .request(/*Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,*/ Manifest.permission.CALL_PHONE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE/*,
+                        Manifest.permission.CAMERA*/) // ask single or multiple permission once
                 .subscribe();
     }
 
@@ -161,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(Color.GREEN);
             snackbar.show();
-            fab.setVisibility(View.VISIBLE);
+         //   fab.setVisibility(View.VISIBLE);
 
         } else {
             Snackbar snackbar2 = Snackbar
@@ -170,10 +164,10 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             TextView textView2 = sbView2.findViewById(android.support.design.R.id.snackbar_text);
             textView2.setTextColor(Color.RED);
             snackbar2.show();
-            fab.hide();
+           /* fab.hide();
             if (alarmMgr != null) {
                 alarmMgr.cancel(pendingIntent);
-            }
+            }*/
 
         }
     }

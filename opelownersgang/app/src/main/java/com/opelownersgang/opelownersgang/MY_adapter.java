@@ -1,5 +1,5 @@
 package com.opelownersgang.opelownersgang;
-
+/*
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -51,3 +51,4 @@ public class MY_adapter extends BaseAdapter {
         return view;
     }
 }
+*/
