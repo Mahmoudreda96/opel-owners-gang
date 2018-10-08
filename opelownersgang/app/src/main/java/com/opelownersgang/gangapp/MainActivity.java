@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         url = "https://test.opelownersgang.com";
 
         //hide floating Button & main view
-        mainview.setVisibility(View.INVISIBLE);
+
        // fab.hide();
         //display permeation
         permeation_alert();
@@ -86,12 +86,14 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
+                mainview.setVisibility(View.INVISIBLE);
+                progressBar.getDisplay();
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                progressBar.setVisibility(View.GONE);
+                progressBar.stopNestedScroll();
                 mainview.setVisibility(View.VISIBLE);
                 String javaScript = "javascript:(function() { var a= document.getElementsByTagName('header');a[0].hidden='true';a=document.getElementsByClassName('page_body');a[0].style.padding='0px';})()";
                 mainview.loadUrl(javaScript);
