@@ -1,7 +1,4 @@
-package com.opelownersgang.opelownersgang;
-/**
- * Created by Mahmoud reda.
- */
+package com.opelownersgang.gangapp;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

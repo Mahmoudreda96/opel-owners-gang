@@ -1,4 +1,4 @@
-package com.opelownersgang.opelownersgang;
+package com.opelownersgang.gangapp;
 /*
 import android.annotation.SuppressLint;
 import android.content.Context;

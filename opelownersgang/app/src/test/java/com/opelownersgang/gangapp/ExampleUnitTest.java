@@ -1,4 +1,4 @@
-package com.opelownersgang.opelownersgang;
+package com.opelownersgang.gangapp;
 
 import org.junit.Test;
 

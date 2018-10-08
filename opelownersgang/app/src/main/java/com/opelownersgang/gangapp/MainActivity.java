@@ -1,4 +1,6 @@
-package com.opelownersgang.opelownersgang;
+package com.opelownersgang.gangapp;
+//test change
+
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -28,9 +30,9 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     WebView mainview;
     ProgressBar progressBar;
     String url;
-    // FloatingActionButton fab;
-    // private AlarmManager alarmMgr;
-    // private PendingIntent pendingIntent;
+   // FloatingActionButton fab;
+   // private AlarmManager alarmMgr;
+   // private PendingIntent pendingIntent;
     WebSettings webSettings;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -45,11 +47,11 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         progressBar = findViewById(R.id.progressBar);
         //fab = findViewById(R.id.fab);
 
-        url = "https://test.opelownersgang.com";
+        url = "https://www.opelownersgang.com";
 
         //hide floating Button & main view
         mainview.setVisibility(View.INVISIBLE);
-        // fab.hide();
+       // fab.hide();
         //display permeation
         permeation_alert();
 
@@ -58,10 +60,10 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 
         // refresh url after .. time;
         //Intent myIntent = new Intent(MainActivity.this, MyService.class);
-        // pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
+       // pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
         //alarmMgr = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
-        // Calendar calendar = Calendar.getInstance();
-        // alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
+       // Calendar calendar = Calendar.getInstance();
+       // alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
 
         //improve webView performance
         mainview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -155,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(Color.GREEN);
             snackbar.show();
-            //   fab.setVisibility(View.VISIBLE);
+         //   fab.setVisibility(View.VISIBLE);
 
         } else {
             Snackbar snackbar2 = Snackbar
