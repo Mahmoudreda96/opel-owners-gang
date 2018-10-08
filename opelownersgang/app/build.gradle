@@ -46,6 +46,6 @@ dependencies {
     dependencies {
         implementation 'com.evernote:android-job:1.2.4'
     }
-    implementation 'com.android.volley:volley:1.0.0'
+    implementation 'com.android.volley:volley:1.1.0'
 
 }

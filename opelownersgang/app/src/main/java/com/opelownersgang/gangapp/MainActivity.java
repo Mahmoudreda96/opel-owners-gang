@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         progressBar = findViewById(R.id.progressBar);
         //fab = findViewById(R.id.fab);
 
-        url = "https://www.opelownersgang.com";
+        url = "https://test.opelownersgang.com";
 
         //hide floating Button & main view
         mainview.setVisibility(View.INVISIBLE);
