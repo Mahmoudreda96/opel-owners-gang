@@ -5,16 +5,15 @@ package com.opelownersgang.gangapp;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
    // private PendingIntent pendingIntent;
     WebSettings webSettings;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +49,8 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         url = "https://test.opelownersgang.com";
 
         //hide floating Button & main view
-
        // fab.hide();
+
         //display permeation
         permeation_alert();
 
@@ -82,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         webSettings.setUseWideViewPort(true);
 
 
+
         mainview.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                progressBar.stopNestedScroll();
                 mainview.setVisibility(View.VISIBLE);
                 String javaScript = "javascript:(function() { var a= document.getElementsByTagName('header');a[0].hidden='true';a=document.getElementsByClassName('page_body');a[0].style.padding='0px';})()";
                 mainview.loadUrl(javaScript);
@@ -104,15 +103,14 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (URLUtil.isNetworkUrl(url)) {
                     return false;
-                } else if (appInstalledOrNot(url)) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    startActivity(intent);
-                } else if (url.startsWith("tel:") || url.equals("https://www.facebook.com/groups/opel.owners.gang/")) {
+                }else if (url.startsWith("tel:") || url.contains("https://www.instagram.com/opel_owners_gang/")) {
                     Intent intent = new Intent(Intent.ACTION_VIEW,
                             Uri.parse(url));
                     startActivity(intent);
-                } else {
-                    view.loadUrl(url);
+                } else  {
+                    view.getContext().startActivity(
+                            new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                    return true;
                 }
                 return true;
             }
@@ -128,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         //check internet
         checkConnection();
         mainview.loadUrl(url);
+
     }
 
     @Override
@@ -159,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(Color.GREEN);
             snackbar.show();
+            mainview.loadUrl(url);
          //   fab.setVisibility(View.VISIBLE);
 
         } else {
@@ -182,9 +182,11 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         // register connection status listener
         MyApplication.getInstance().setConnectivityListener(this);
     }
-
     public void onDestroy() {
         super.onDestroy();
+        CookieSyncManager.createInstance(this);
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.removeAllCookie();
     }
 
     private void checkConnection() {
@@ -195,17 +197,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         showSnack(isConnected);
-    }
-
-    private boolean appInstalledOrNot(String uri) {
-        PackageManager pm = getPackageManager();
-        try {
-            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
-            return true;
-        } catch (PackageManager.NameNotFoundException e) {
-        }
-
-        return false;
     }
 }
 
