@@ -29,13 +29,13 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     WebView mainview;
     ProgressBar progressBar;
     String url;
-   // FloatingActionButton fab;
-   // private AlarmManager alarmMgr;
-   // private PendingIntent pendingIntent;
     WebSettings webSettings;
+    // FloatingActionButton fab;
+    // private AlarmManager alarmMgr;
+    // private PendingIntent pendingIntent;
 
 
-    @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
+    @SuppressLint({"ClickableViewAccessibility", "SetJavaScriptEnabled"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         url = "https://test.opelownersgang.com";
 
         //hide floating Button & main view
-       // fab.hide();
+        // fab.hide();
 
         //display permeation
         permeation_alert();
@@ -59,13 +59,13 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 
         // refresh url after .. time;
         //Intent myIntent = new Intent(MainActivity.this, MyService.class);
-       // pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
+        // pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
         //alarmMgr = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
-       // Calendar calendar = Calendar.getInstance();
-       // alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
+        // Calendar calendar = Calendar.getInstance();
+        // alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
 
         //improve webView performance
-        mainview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        // mainview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         mainview.setWebChromeClient(new WebChromeClient());
         webSettings = mainview.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -75,11 +75,9 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         webSettings.setAppCacheEnabled(true);
         webSettings.setSaveFormData(true);
         webSettings.setGeolocationEnabled(true);
-        webSettings.setSupportMultipleWindows(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         webSettings.setUseWideViewPort(true);
-
 
 
         mainview.setWebViewClient(new WebViewClient() {
@@ -94,20 +92,17 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 mainview.setVisibility(View.VISIBLE);
-                String javaScript = "javascript:(function() { var a= document.getElementsByTagName('header');a[0].hidden='true';a=document.getElementsByClassName('page_body');a[0].style.padding='0px';})()";
-                mainview.loadUrl(javaScript);
-
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (URLUtil.isNetworkUrl(url)) {
                     return false;
-                }else if (url.startsWith("tel:") || url.contains("https://www.instagram.com/opel_owners_gang/")) {
+                } else if (url.startsWith("tel:")) {
                     Intent intent = new Intent(Intent.ACTION_VIEW,
                             Uri.parse(url));
                     startActivity(intent);
-                } else  {
+                } else {
                     view.getContext().startActivity(
                             new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                     return true;
@@ -159,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             textView.setTextColor(Color.GREEN);
             snackbar.show();
             mainview.loadUrl(url);
-         //   fab.setVisibility(View.VISIBLE);
+            //   fab.setVisibility(View.VISIBLE);
 
         } else {
             Snackbar snackbar2 = Snackbar
@@ -182,8 +177,10 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         // register connection status listener
         MyApplication.getInstance().setConnectivityListener(this);
     }
+
     public void onDestroy() {
         super.onDestroy();
+        //clear cache in kitkat
         CookieSyncManager.createInstance(this);
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
