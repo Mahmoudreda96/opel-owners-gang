@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         // alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
 
         //improve webView performance
-        // mainview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         mainview.setWebChromeClient(new WebChromeClient());
         webSettings = mainview.getSettings();
         webSettings.setJavaScriptEnabled(true);
