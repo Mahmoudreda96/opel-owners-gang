@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         mainview.setWebChromeClient(new WebChromeClient());
         webSettings = mainview.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setSupportMultipleWindows(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
