@@ -7,13 +7,8 @@ android {
         applicationId "com.opelownersgang.gangapp"
         minSdkVersion 19
         targetSdkVersion 27
-<<<<<<< HEAD
         versionCode 5
-        versionName "1.04"
-=======
-        versionCode 3
-        versionName "1"
->>>>>>> 2959a73006760f5c49d6168aa8042c8719ae3064
+        versionName "1.05"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
