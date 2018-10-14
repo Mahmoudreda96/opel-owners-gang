@@ -12,8 +12,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -180,10 +178,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 
     public void onDestroy() {
         super.onDestroy();
-        //clear cache in kitkat
-        CookieSyncManager.createInstance(this);
-        CookieManager cookieManager = CookieManager.getInstance();
-        cookieManager.removeAllCookie();
     }
 
     private void checkConnection() {
