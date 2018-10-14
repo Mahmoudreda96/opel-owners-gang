@@ -91,12 +91,12 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (URLUtil.isNetworkUrl(url)) {
-                    return false;
-                } else if (url.startsWith("tel:")) {
+                if (url.startsWith("tel:")||url.contains("https://www.facebook.com/")||url.contains("https://www.youtube.com/")||url.contains("https://www.instagram.com/")||url.contains("https://play.google.com")) {
                     Intent intent = new Intent(Intent.ACTION_VIEW,
                             Uri.parse(url));
                     startActivity(intent);
+                } else if (URLUtil.isNetworkUrl(url)) {
+                    return false;
                 } else {
                     view.getContext().startActivity(
                             new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
