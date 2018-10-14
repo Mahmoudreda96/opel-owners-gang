@@ -71,9 +71,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         webSettings.setSupportMultipleWindows(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
-        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        webSettings.setAppCacheEnabled(true);
-        webSettings.setSaveFormData(true);
         webSettings.setGeolocationEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
@@ -120,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         });*/
         //check internet
         checkConnection();
-        mainview.loadUrl(url);
 
     }
 
@@ -163,6 +159,10 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             TextView textView2 = sbView2.findViewById(android.support.design.R.id.snackbar_text);
             textView2.setTextColor(Color.RED);
             snackbar2.show();
+            webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+            webSettings.setAppCacheEnabled(true);
+            webSettings.setSaveFormData(true);
+            mainview.loadUrl(url);
            /* fab.hide();
             if (alarmMgr != null) {
                 alarmMgr.cancel(pendingIntent);
