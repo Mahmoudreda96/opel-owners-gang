@@ -1,7 +1,4 @@
 package com.opelownersgang.gangapp;
-//test change
-
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -12,7 +9,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -45,11 +41,10 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     private String mCameraPhotoPath;
     private static final int INPUT_FILE_REQUEST_CODE = 1;
     private static final int FILECHOOSER_RESULTCODE = 1;
-    
-
     // FloatingActionButton fab;
     // private AlarmManager alarmMgr;
     // private PendingIntent pendingIntent;
+
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -63,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         );
         return imageFile;
     }
-
 
     @SuppressLint({"SetJavaScriptEnabled"})
     @Override
@@ -108,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         webSettings.setAllowFileAccess(true);
         webSettings.setAllowContentAccess(true);
         webSettings.supportZoom();
-        mainview.loadUrl(url);
 
         mainview.setWebViewClient(new WebViewClient() {
             @Override
@@ -248,8 +241,8 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             Intent chooserIntent = Intent.createChooser(i, "Image Chooser");
 
             // Set camera intent to file chooser
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS
-                    , new Parcelable[]{captureIntent});
+           // chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS
+              //      , new Parcelable[]{captureIntent});
 
             // On select image call onActivityResult method of activity
             startActivityForResult(chooserIntent, FILECHOOSER_RESULTCODE);
@@ -263,10 +256,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         }
 
         //openFileChooser for other Android versions
-        public void openFileChooser(ValueCallback<Uri> uploadMsg,
-                                    String acceptType,
-                                    String capture) {
-
+        public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
             openFileChooser(uploadMsg, acceptType);
         }
 
@@ -413,6 +403,3 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         showSnack(isConnected);
     }
 }
-
-
-
