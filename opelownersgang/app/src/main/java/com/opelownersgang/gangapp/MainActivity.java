@@ -1,4 +1,5 @@
 package com.opelownersgang.gangapp;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -23,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.onesignal.OneSignal;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
@@ -70,6 +72,12 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         //fab = findViewById(R.id.fab);
         //hide floating Button & main view
         // fab.hide();
+
+        // OneSignal Initialization
+        OneSignal.startInit(this)
+                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+                .unsubscribeWhenNotificationsAreDisabled(true)
+                .init();
 
         //display permeation
         permeation_alert();
@@ -241,8 +249,8 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             Intent chooserIntent = Intent.createChooser(i, "Image Chooser");
 
             // Set camera intent to file chooser
-           // chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS
-              //      , new Parcelable[]{captureIntent});
+            // chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS
+            //      , new Parcelable[]{captureIntent});
 
             // On select image call onActivityResult method of activity
             startActivityForResult(chooserIntent, FILECHOOSER_RESULTCODE);
