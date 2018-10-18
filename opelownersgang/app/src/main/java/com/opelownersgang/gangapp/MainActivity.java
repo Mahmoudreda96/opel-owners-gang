@@ -78,20 +78,17 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
                 .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
                 .unsubscribeWhenNotificationsAreDisabled(true)
                 .init();
-
+        OneSignal.setLocationShared(true);
         //display permeation
         permeation_alert();
-
         //check new message
         //startService(new Intent(MainActivity.this, MyService.class));
-
         // refresh url after .. time;
         //Intent myIntent = new Intent(MainActivity.this, MyService.class);
         // pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
         //alarmMgr = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
         // Calendar calendar = Calendar.getInstance();
         // alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
-
         webSettings = mainview.getSettings();
         // enabled Java Script
         webSettings.setJavaScriptEnabled(true);
@@ -351,8 +348,8 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         //permission alert to enable
         RxPermissions rxPermissions = new RxPermissions(this);
         rxPermissions
-                .request(/*Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,*/ Manifest.permission.CALL_PHONE,
+                .request(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CALL_PHONE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.CAMERA) // ask single or multiple permission once
                 .subscribe();
