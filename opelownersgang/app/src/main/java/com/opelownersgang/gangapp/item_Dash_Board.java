@@ -1,6 +1,6 @@
 package com.opelownersgang.gangapp;
 
-/*public class item_Dash_Board {
+public class item_Dash_Board {
 
     private String time;
     private String Desc;
@@ -30,4 +30,3 @@ package com.opelownersgang.gangapp;
         this.id = id;
     }
 }
-*/

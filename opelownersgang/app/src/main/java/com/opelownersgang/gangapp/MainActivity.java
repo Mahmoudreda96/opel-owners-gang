@@ -3,6 +3,9 @@ package com.opelownersgang.gangapp;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -11,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -30,6 +34,7 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
@@ -43,9 +48,9 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     private String mCameraPhotoPath;
     private static final int INPUT_FILE_REQUEST_CODE = 1;
     private static final int FILECHOOSER_RESULTCODE = 1;
-    // FloatingActionButton fab;
-    // private AlarmManager alarmMgr;
-    // private PendingIntent pendingIntent;
+    FloatingActionButton fab;
+    private AlarmManager alarmMgr;
+    private PendingIntent pendingIntent;
 
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -69,9 +74,9 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         mainview = findViewById(R.id.webview);
         progressBar = findViewById(R.id.progressBar);
         url = "https://www.opelownersgang.com";
-        //fab = findViewById(R.id.fab);
-        //hide floating Button & main view
-        // fab.hide();
+        fab = findViewById(R.id.fab);
+        //hide floating Button
+        fab.hide();
 
         // OneSignal Initialization
         OneSignal.startInit(this)
@@ -82,13 +87,13 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         //display permeation
         permeation_alert();
         //check new message
-        //startService(new Intent(MainActivity.this, MyService.class));
+        startService(new Intent(MainActivity.this, MyService.class));
         // refresh url after .. time;
-        //Intent myIntent = new Intent(MainActivity.this, MyService.class);
-        // pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
-        //alarmMgr = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
-        // Calendar calendar = Calendar.getInstance();
-        // alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
+        Intent myIntent = new Intent(MainActivity.this, MyService.class);
+        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
+        alarmMgr = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
+        Calendar calendar = Calendar.getInstance();
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
         webSettings = mainview.getSettings();
         // enabled Java Script
         webSettings.setJavaScriptEnabled(true);
@@ -144,10 +149,10 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         mainview.setWebChromeClient(new ChromeClient());
 
         //floating Button
-       /* fab.setOnClickListener(view -> {
+        fab.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(), display_notifications.class);
             startActivity(i);
-        });*/
+        });
 
         //check internet
         checkConnection();
@@ -365,7 +370,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             textView.setTextColor(Color.GREEN);
             snackbar.show();
             mainview.loadUrl(url);
-            //   fab.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
 
         } else {
             Snackbar snackbar2 = Snackbar
@@ -379,10 +384,10 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             webSettings.setAppCacheEnabled(true);
             webSettings.setSaveFormData(true);
             mainview.loadUrl(url);
-           /* fab.hide();
+            fab.hide();
             if (alarmMgr != null) {
                 alarmMgr.cancel(pendingIntent);
-            }*/
+            }
 
         }
     }
