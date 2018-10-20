@@ -16,9 +16,7 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,7 +93,7 @@ public class MyService extends Service {
                     h = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                     y = RingtoneManager.getRingtone(getApplicationContext(), h);
                     mNM.notify(0, mNotify);
-                    v.vibrate(100000);
+                    v.vibrate(1000);
                     y.play();
                 }
 
@@ -103,25 +101,5 @@ public class MyService extends Service {
                 Toast.makeText(getApplicationContext(), "Problem in Server", Toast.LENGTH_LONG).show();
             }
         }, error -> Toast.makeText(getApplicationContext(), "No Internet Access", Toast.LENGTH_LONG));
-        Intent intent1 = new Intent(this.getApplicationContext(), display_notifications.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent1, 0);
-
-        Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle("the gang");
-        builder.setContentText("touch to disable " + n + " new massage");
-        builder.setSmallIcon(R.drawable.logo);
-        builder.setContentIntent(pIntent);
-        builder.setAutoCancel(true);
-        mNotify = builder.build();
-        mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        h = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        y = RingtoneManager.getRingtone(getApplicationContext(), h);
-        mNM.notify(0, mNotify);
-        v.vibrate(100000);
-        y.play();
-        // Execute Requesting
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        requestQueue.add(request);
     }
 }

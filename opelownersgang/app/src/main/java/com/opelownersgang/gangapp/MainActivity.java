@@ -84,23 +84,29 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
                 .unsubscribeWhenNotificationsAreDisabled(true)
                 .init();
         OneSignal.setLocationShared(true);
+
         //display permeation
         permeation_alert();
+
         //check new message
         startService(new Intent(MainActivity.this, MyService.class));
+
         // refresh url after .. time;
         Intent myIntent = new Intent(MainActivity.this, MyService.class);
         pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
         alarmMgr = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
         Calendar calendar = Calendar.getInstance();
-        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_FIFTEEN_MINUTES, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
+
         webSettings = mainview.getSettings();
         // enabled Java Script
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+
         //Web view scroll
         mainview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+
         //improve webView performance
         webSettings.setGeolocationEnabled(true);
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
@@ -112,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         webSettings.setAllowFileAccess(true);
         webSettings.setAllowContentAccess(true);
         webSettings.supportZoom();
-
         mainview.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
