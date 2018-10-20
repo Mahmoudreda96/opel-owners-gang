@@ -12,8 +12,8 @@
 
     <ImageView
         android:id="@+id/splash"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:background="@drawable/logo"
         android:contentDescription="@string/todo" />
 </LinearLayout>
