@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 
         //floating Button
         fab.setOnClickListener(view -> {
-            Intent i = new Intent(getApplicationContext(), display_notifications.class);
+            Intent i = new Intent(getApplicationContext(), navigation_drawer.class);
             startActivity(i);
         });
 

@@ -1,5 +1,7 @@
 package com.opelownersgang.gangapp;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +19,7 @@ public class navigation_drawer extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -49,15 +52,23 @@ public class navigation_drawer extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.about_app:
+                Intent intent1 = new Intent(navigation_drawer.this, about_app.class);
+                startActivity(intent1);
+                break;
+            case R.id.share:
+                Intent intent2 = new Intent(navigation_drawer.this, share_app.class);
+                startActivity(intent2);
+                break;
+            case R.id.rate:
+                Intent i = new Intent(android.content.Intent.ACTION_VIEW);
+                i.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.opelownersgang.gangapp"));
+                startActivity(i);
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -67,17 +78,24 @@ public class navigation_drawer extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_1) {
+        } else if (id == R.id.nav_2) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_3) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_4) {
 
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_5) {
+
+        } else if (id == R.id.nav_6) {
+
+        } else if (id == R.id.nav_7) {
+
+        } else if (id == R.id.nav_8) {
+
+        } else if (id == R.id.nav_9) {
+
+        } else if (id == R.id.nav_10) {
 
         }
 

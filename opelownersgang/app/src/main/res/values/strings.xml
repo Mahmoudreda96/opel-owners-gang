@@ -23,4 +23,13 @@
     <string name="joun">انضم لينا</string>
     <string name="apout">اعرفنا</string>
     <string name="home2">الصفحة الرئيسية</string>
+    <string name="share_app">Share app</string>
+    <string name="rate_app">Rate app</string>
+    <string name="about_app">About app</string>
+    <string name="or">or</string>
+    <string name="klam">هو الدليل الأول والحصرى لكل اعضاء الجروب ولكل ملاك الأوبل عموما...يمكنك من خلاله معرفة كل ما تحتاجه من خلال شبكة تعاقدات تمتد لأكثر من 200 جهه مختلفه من مطاعم ومراكز خدمه وقطع غيار واكسسوارات للسيارات وكار كير وخلافه....كما يمكنك متابعة اخر الاحداث والحصريات الخاصه بمجتمع العصابه من عروض وايفينتات...سجل عضويتك الأن وتمتع بكامل مزايا كارنيه العصابه وعيش جو المجرم الحقيقى فى دولة العصابه الكبيره.</string>
+    <string name="offered_by_gang_dev_team">Offered By Gang Dev Team:</string>
+    <string name="mahmoud_lebda">Mahmoud lebda</string>
+    <string name="mahmoud_reda">Mahmoud reda</string>
+    <string name="app">معالى وفخامة الساده مجرمى ومجرمات العصابه الكرام… أهلا بحضراتكم فى App العصابه</string>
 </resources>

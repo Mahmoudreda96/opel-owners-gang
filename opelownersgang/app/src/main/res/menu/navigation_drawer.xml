@@ -2,8 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:id="@+id/share"
+        android:layout_height="match_parent"
+        android:title="@string/share_app" />
+    <item
+        android:id="@+id/rate"
+        android:title="@string/rate_app" />
+    <item
+        android:id="@+id/about_app"
+        android:title="@string/about_app"
         app:showAsAction="never" />
 </menu>
