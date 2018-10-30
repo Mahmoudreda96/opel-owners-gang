@@ -1,4 +1,4 @@
-package com.opelownersgang.gangapp;
+package com.opelownersgang.gangapp.activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.opelownersgang.gangapp.R;
+import com.opelownersgang.gangapp.menu.about_app;
+import com.opelownersgang.gangapp.menu.share_app;
 
 public class navigation_drawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

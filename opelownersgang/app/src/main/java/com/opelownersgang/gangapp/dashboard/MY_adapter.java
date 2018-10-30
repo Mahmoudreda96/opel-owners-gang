@@ -1,4 +1,4 @@
-package com.opelownersgang.gangapp;
+package com.opelownersgang.gangapp.dashboard;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.opelownersgang.gangapp.R;
 
 import java.util.ArrayList;
 

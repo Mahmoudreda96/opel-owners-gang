@@ -23,7 +23,7 @@
         android:xlargeScreens="true" />
 
     <application
-        android:name=".MyApplication"
+        android:name=".service_receviver.MyApplication"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@drawable/logo"
@@ -32,33 +32,55 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".splash_screen">
+
+        <activity android:name=".activity.splash_screen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
+
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".display_notifications" />
+
+        <activity android:name=".dashboard.display_notifications" />
+
         <activity
-            android:name=".navigation_drawer"
+            android:name=".activity.navigation_drawer"
             android:icon="@drawable/logo"
             android:theme="@style/AppTheme" />
 
+        <activity
+            android:name=".menu.share_app"
+            android:theme="@style/AppTheme.ActionBar" />
+
+        <activity
+            android:name=".menu.about_app"
+            android:theme="@style/AppTheme.ActionBar" />
+
+        <activity android:name=".navigation_drawer_menu.about_us" />
+        <activity android:name=".navigation_drawer_menu.goin_us" />
+        <activity android:name=".navigation_drawer_menu.goals" />
+        <activity android:name=".navigation_drawer_menu.protocol" />
+        <activity android:name=".navigation_drawer_menu.contract_network" />
+        <activity android:name=".navigation_drawer_menu.lastest_news" />
+        <activity android:name=".navigation_drawer_menu.gallery" />
+        <activity android:name=".navigation_drawer_menu.call_us" />
+        <activity android:name=".navigation_drawer_menu.periodic_evaluation" />
+
         <service
-            android:name=".MyService"
+            android:name=".service_receviver.MyService"
             android:enabled="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED" />
 
         <receiver
-            android:name=".ConnectivityReceiver"
+            android:name=".service_receviver.ConnectivityReceiver"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
@@ -75,11 +97,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
-        <activity android:name=".share_app"
-            android:theme="@style/AppTheme.ActionBar" />
-        <activity android:name=".about_app"
-            android:theme="@style/AppTheme.ActionBar"/>
     </application>
 
 </manifest>

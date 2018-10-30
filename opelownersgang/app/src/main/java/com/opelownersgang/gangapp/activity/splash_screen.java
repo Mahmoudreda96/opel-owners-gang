@@ -1,4 +1,4 @@
-package com.opelownersgang.gangapp;
+package com.opelownersgang.gangapp.activity;
 
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -9,6 +9,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.opelownersgang.gangapp.R;
 
 public class splash_screen extends AppCompatActivity {
     public void onAttachedToWindow() {

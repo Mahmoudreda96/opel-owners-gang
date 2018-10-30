@@ -1,9 +1,11 @@
-package com.opelownersgang.gangapp;
+package com.opelownersgang.gangapp.menu;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
+
+import com.opelownersgang.gangapp.R;
 
 public class share_app extends AppCompatActivity {
     Button share;

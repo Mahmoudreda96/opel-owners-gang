@@ -1,4 +1,4 @@
-package com.opelownersgang.gangapp;
+package com.opelownersgang.gangapp.service_receviver;
 
 import android.app.Application;
 

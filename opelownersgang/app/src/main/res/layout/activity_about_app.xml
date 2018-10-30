@@ -8,7 +8,7 @@
     android:background="@drawable/backgroung"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".about_app">
+    tools:context=".menu.about_app">
 
     <ScrollView
         android:layout_width="match_parent"

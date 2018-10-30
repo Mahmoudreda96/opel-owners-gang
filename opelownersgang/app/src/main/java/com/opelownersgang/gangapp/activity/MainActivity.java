@@ -1,4 +1,4 @@
-package com.opelownersgang.gangapp;
+package com.opelownersgang.gangapp.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -29,6 +29,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.onesignal.OneSignal;
+import com.opelownersgang.gangapp.R;
+import com.opelownersgang.gangapp.dashboard.display_notifications;
+import com.opelownersgang.gangapp.service_receviver.ConnectivityReceiver;
+import com.opelownersgang.gangapp.service_receviver.MyApplication;
+import com.opelownersgang.gangapp.service_receviver.MyService;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
@@ -155,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 
         //floating Button
         fab.setOnClickListener(view -> {
-            Intent i = new Intent(getApplicationContext(), navigation_drawer.class);
+            Intent i = new Intent(getApplicationContext(), display_notifications.class);
             startActivity(i);
         });
 

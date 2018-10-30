@@ -1,4 +1,4 @@
-package com.opelownersgang.gangapp;
+package com.opelownersgang.gangapp.service_receviver;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.opelownersgang.gangapp.R;
+import com.opelownersgang.gangapp.dashboard.display_notifications;
 
 import org.json.JSONException;
 import org.json.JSONObject;

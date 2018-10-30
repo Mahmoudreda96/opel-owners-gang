@@ -1,4 +1,4 @@
-package com.opelownersgang.gangapp;
+package com.opelownersgang.gangapp.dashboard;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +13,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.opelownersgang.gangapp.service_receviver.ConnectivityReceiver;
+import com.opelownersgang.gangapp.service_receviver.MyApplication;
+import com.opelownersgang.gangapp.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,7 +49,8 @@ public class display_notifications extends AppCompatActivity implements Connecti
 
 
         // URL To Fetch Data From The Server
-        GETURL = "http://opelownersgang.com/Notify/get_msg.php";
+        //GETURL = "http://opelownersgang.com/Notify/get_msg.php";
+        GETURL="https://www.opelownersgang.com/wp-json/wp/v2/gang_protocol?fbclid=IwAR0VAzXceLiklE0tMRU10VGl_ZkgFlpmmsLN_VRxVXzSVhAJX5tLySMG-ds";
         l = findViewById(R.id.list_notification);
 
         // Method To Get Chat The Data From DataBase
@@ -61,9 +65,10 @@ public class display_notifications extends AppCompatActivity implements Connecti
 
                     ob = response.getJSONObject(i);
                     object = new item_Dash_Board();
-                    object.setDesc(ob.getString("msg"));
-                    object.setTime(ob.getString("msg_date"));
-                    object.setId(ob.getString("ID"));
+                    object.setDesc(ob.getString("content"));
+//                    object.setDesc(ob.getString("msg"));
+//                    object.setTime(ob.getString("msg_date"));
+//                    object.setId(ob.getString("ID"));
                     list_Item.add(object);
                 }
                 adapter = new MY_adapter(getApplicationContext(), list_Item);
